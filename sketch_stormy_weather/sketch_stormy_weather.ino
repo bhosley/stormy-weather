@@ -7,9 +7,11 @@ Adafruit_NeoPixel lightning = Adafruit_NeoPixel(NUM_LEDS, LED_PIN, NEO_GRB + NEO
 int strikeDenominator = 10;
 
 void setup() {
-  // Neopixel setup
+  // Lightning setup
   lightning.begin();
   lightning.show(); 
+
+  // TODO Rain Loop Setup
 }
 
 void loop() {
@@ -17,15 +19,17 @@ void loop() {
   if (random(strikeDenominator) == 3) {
     int led = ranodm(NUM_LEDS);
     for (int i = 0; i < 10; i++) {
-      lightningStrike(random(NUM_LEDS));
+      callLightning(random(NUM_LEDS));
+      // TODO Call thunder interrupt
     }
-    /* Increased odds for follow-on strike (decrease denominator) */
+    // TODO Increased odds for follow-on strike (decrease denominator) 
   } else {
-    /* Decrease the odds of strike (Increase denominator) */
+    // TODO Decrease the odds of strike (Increase denominator)
   }
-  /* Turn off all Pixels */
-  /* Delay between Loops */
+  // TODO Turn off all Pixels
+  // TODO Delay between Loops
 }
 
-/* To Black Function */
-/* lightning strike function */
+// To Black Function
+// lightning strike function
+// thunder sound interrupt
