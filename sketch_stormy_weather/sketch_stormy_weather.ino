@@ -15,7 +15,6 @@ DFRobotDFPlayerMini myDFPlayer;
 
 void setup()
 {
-
   pinMode(LED_PIN, OUTPUT);
   pinMode(BUSY_PIN, INPUT);
 
@@ -39,31 +38,24 @@ void setup()
 
 void loop()
 {
-  originalFlash();
-  
-  int thunderDelay = random (500, 3000);  // Min. and max. delay between flashing and playing sound
-  int thunderFile = random (1, NUM_SOUND_EFFECTS);       // There are 17 soundfiles: 0001.mp3 ... 0017.mp3
-  int loopDelay = random (5000, 30000);   // Min. and max. delay between each loop
-
-  Serial.print(F("Pausing before playing thunder sound, milliseconds: "));
-  Serial.println(thunderDelay);
-  delay(thunderDelay);
-
-  Serial.print(F("Playing thunder sound, file number: "));
-  Serial.println(thunderFile);
-  myDFPlayer.playMp3Folder(thunderFile);
-  delay(1000); // Give the DFPlayer some time
+  originalLightning();
+  originalThunder();
 
   while (digitalRead(BUSY_PIN) == LOW) { // Wait for the DFPlayer to finish playing the MP3 file
   }
 
+  int loopDelay = random (5000, 30000);   // Min. and max. delay between each loop
   Serial.print(F("Pausing before next loop, milliseconds: "));
   Serial.println(loopDelay);
   delay(loopDelay);
-
 }
 
-void originalFlash() {
+/**
+ * 
+ * 
+ */
+
+void originalLightning() {
   int flashCount = random (3, 15);        // Min. and max. number of flashes each loop
   int flashBrightnessMin =  10;           // LED flash min. brightness (0-255)
   int flashBrightnessMax =  255;          // LED flash max. brightness (0-255)
@@ -86,4 +78,18 @@ void originalFlash() {
     analogWrite(LED_PIN, 0); // Turn the LED strip off
     delay(random(nextFlashDelayMin, nextFlashDelayMax)); // Random delay before next flash
   }
+}
+
+void originalThunder() {
+  int thunderDelay = random (500, 3000);  // Min. and max. delay between flashing and playing sound
+  int thunderFile = random (1, NUM_SOUND_EFFECTS);       // There are 17 soundfiles: 0001.mp3 ... 0017.mp3
+
+  Serial.print(F("Pausing before playing thunder sound, milliseconds: "));
+  Serial.println(thunderDelay);
+  delay(thunderDelay);
+
+  Serial.print(F("Playing thunder sound, file number: "));
+  Serial.println(thunderFile);
+  myDFPlayer.playMp3Folder(thunderFile);
+  delay(1000); // Give the DFPlayer some time
 }
