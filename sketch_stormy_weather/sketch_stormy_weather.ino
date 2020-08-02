@@ -53,16 +53,25 @@ void setup()
   // Pixel set-up
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
+
+  // Initialize array of function pointers.
+  functionPtrs[0] = simple_moving_average;
+  functionPtrs[1] = random_moving_average;
 }
 
 void loop()
 {
-  // TODO Randomness before calling strike
-  // TODO new lightning
-  originalLightning();
-  // TODO new thunder
-  originalThunder();
-
+  if (random(chance) == 3) {
+    // TODO new lightning
+    originalLightning();
+    // TODO new thunder
+    originalThunder();
+    // Once there's been one strike, I make it more likely that there will be a second.
+    chance = HIGH_STRIKE_LIKELIHOOD;
+  } else {
+    chance = LOW_STRIKE_LIKELIHOOD;
+  };
+  
   while (digitalRead(BUSY_PIN) == LOW) { 
     // Wait for the DFPlayer to finish playing the MP3 file
   }
@@ -74,37 +83,89 @@ void loop()
 }
 
 void lightningStrike() {
-  if (random(chance) == 3) {
-  int led = random(NUM_LEDS);
-    for (int i = 0; i < 10; i++) {
-      
-      float brightness = callFunction(random(NUM_FUNCTIONS));
-      float scaledWhite = abs(brightness*500);
-      
-      strip.setPixelColor(random(NUM_LEDS), strip.Color(scaledWhite, scaledWhite, scaledWhite));
-      strip.show();
-      delay(random(5, 100));
-      currentDataPoint++;
-      currentDataPoint = currentDataPoint%NUM_Y_VALUES;
-
-    }
-    // Once there's been one strike, I make it more likely that there will be a second.
-    chance = HIGH_STRIKE_LIKELIHOOD;
-  } else {
-    chance = LOW_STRIKE_LIKELIHOOD;
-  }
-  turnAllPixelsOff();
-
-  //
-
   
+  int led = random(NUM_LEDS);
+  for (int i = 0; i < 10; i++) {
+    float brightness = callFunction(random(NUM_FUNCTIONS));
+    float scaledWhite = abs(brightness*500);
+    
+    strip.setPixelColor(random(NUM_LEDS), strip.Color(scaledWhite, scaledWhite, scaledWhite));
+    strip.show();
+    delay(random(5, 100));
+    currentDataPoint++;
+    currentDataPoint = currentDataPoint%NUM_Y_VALUES;
+  };
+  strip.clear();
 }
 
 void thunderClap() {}
 
-/*
+/**
  *  OLD FUNCTIONS 
  */
+
+const int HIGH_STRIKE_LIKELIHOOD = 5;
+const int LOW_STRIKE_LIKELIHOOD = 10;
+int currentDataPoint = 0;
+int chance = LOW_STRIKE_LIKELIHOOD;
+
+// Simple moving average plot
+int NUM_Y_VALUES = 17;
+
+float yValues[] = {
+  0,
+  7,
+  10,
+  9,
+  7.1,
+  7.5,
+  7.4,
+  12,
+  15,
+  10,
+  0,
+  3,
+  3.5,
+  4,
+  1,
+  7,
+  1
+};
+
+float simple_moving_average_previous = 0;
+float random_moving_average_previous = 0;
+
+float (*functionPtrs[10])(); //the array of function pointers
+int NUM_FUNCTIONS = 2;
+
+float callFunction(int index) {
+  return (*functionPtrs[index])(); //calls the function at the index of `index` in the array
+}
+
+// https://en.wikipedia.org/wiki/Moving_average#Simple_moving_average
+float simple_moving_average() {
+  uint32_t startingValue = currentDataPoint;
+  uint32_t endingValue = (currentDataPoint+1)%NUM_Y_VALUES;
+  float simple_moving_average_current = simple_moving_average_previous + 
+                                  (yValues[startingValue])/NUM_Y_VALUES - 
+                                  (yValues[endingValue])/NUM_Y_VALUES;
+
+  simple_moving_average_previous = simple_moving_average_current;
+  return simple_moving_average_current;
+}
+
+
+// Same as simple moving average, but with randomly-generated data points.
+float random_moving_average() {
+  float firstValue = random(1, 10);
+  float secondValue = random(1, 10);
+  float random_moving_average_current = random_moving_average_previous +
+                                  firstValue/NUM_Y_VALUES -
+                                  secondValue/NUM_Y_VALUES;
+  random_moving_average_previous = random_moving_average_current;
+
+  return random_moving_average_current;
+}
 
 void originalLightning() {
   int flashCount = random (3, 15);        // Min. and max. number of flashes each loop
