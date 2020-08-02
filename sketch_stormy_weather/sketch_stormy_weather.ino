@@ -8,32 +8,39 @@
 #define TX_PIN = 3      // DFplayer TX to Arduino
 #define BUSY_PIN = 4    // DFplayer BUSY
 //#define ANALOG_IN = 5
-#define NUM_SOUND_EFFECTS = 17 // Number of lightning sound effects on soundboard
+
+#define NUM_SOUND_EFFECTS = 17  // Number of thunder sound effects on soundboard
+#define NUM_LEDS = 5            // Number of lightning LEDs
 
 SoftwareSerial mySoftwareSerial(RX_PIN, TX_PIN);
 DFRobotDFPlayerMini myDFPlayer;
 
 void setup()
 {
+  // Set Pin Modes
   pinMode(LED_PIN, OUTPUT);
   pinMode(BUSY_PIN, INPUT);
 
+  // Begin Serial Output
   mySoftwareSerial.begin(9600);
   Serial.begin(115200);
-  Serial.println(F("Initializing DFPlayer..."));
 
+  // Attempt Connect to DFPlayer
+  Serial.println(F("Initializing DFPlayer..."));
   if (!myDFPlayer.begin(mySoftwareSerial)) {  //Use softwareSerial to communicate with mp3.
     Serial.println(F("Unable to begin. Check connection and SD card, or reset the Arduino."));
     while (true);
   }
 
+  // DFPlayer set-up
   Serial.println(F("DFPlayer Mini online."));
-
   myDFPlayer.setTimeOut(500);                   // Set serial communictaion time out 500ms
   myDFPlayer.volume(30);                        // Set volume value (0~30).
   myDFPlayer.EQ(DFPLAYER_EQ_BASS);              // Set EQ to BASS (normal/pop/rock/jazz/classic/bass)
   myDFPlayer.outputDevice(DFPLAYER_DEVICE_SD);  // Set device we use SD as default
   myDFPlayer.enableDAC();                       // Enable On-chip DAC
+
+  // Pixel set-up
 }
 
 void loop()
@@ -41,7 +48,11 @@ void loop()
   originalLightning();
   originalThunder();
 
-  while (digitalRead(BUSY_PIN) == LOW) { // Wait for the DFPlayer to finish playing the MP3 file
+  // TODO new lightning
+  // TODO new thunder
+
+  while (digitalRead(BUSY_PIN) == LOW) { 
+    // Wait for the DFPlayer to finish playing the MP3 file
   }
 
   int loopDelay = random (5000, 30000);   // Min. and max. delay between each loop
@@ -50,9 +61,8 @@ void loop()
   delay(loopDelay);
 }
 
-/**
- * 
- * 
+/*
+ *  OLD FUNCTIONS 
  */
 
 void originalLightning() {
