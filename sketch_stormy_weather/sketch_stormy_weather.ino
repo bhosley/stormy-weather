@@ -62,24 +62,18 @@ void setup()
 void loop()
 {
   if (random(chance) == 3) {
-    // TODO new lightning
-    originalLightning();
+    lightningStrike();
     // TODO new thunder
     originalThunder();
+    while (digitalRead(BUSY_PIN) == LOW) { 
+      // Wait for the DFPlayer to finish playing the MP3 file
+    }
     // Once there's been one strike, I make it more likely that there will be a second.
     chance = HIGH_STRIKE_LIKELIHOOD;
   } else {
     chance = LOW_STRIKE_LIKELIHOOD;
-  };
-  
-  while (digitalRead(BUSY_PIN) == LOW) { 
-    // Wait for the DFPlayer to finish playing the MP3 file
   }
-
-  int loopDelay = random (5000, 30000);   // Min. and max. delay between each loop
-  Serial.print(F("Pausing before next loop, milliseconds: "));
-  Serial.println(loopDelay);
-  delay(loopDelay);
+  // Need Random Delay here (specifically for negative checks)
 }
 
 void lightningStrike() {
@@ -167,6 +161,22 @@ float random_moving_average() {
   return random_moving_average_current;
 }
 
+void originalThunder() {
+  int thunderDelay = random (500, 3000);  // Min. and max. delay between flashing and playing sound
+  int thunderFile = random (1, NUM_SOUND_EFFECTS);       // There are 17 soundfiles: 0001.mp3 ... 0017.mp3
+
+  Serial.print(F("Pausing before playing thunder sound, milliseconds: "));
+  Serial.println(thunderDelay);
+  delay(thunderDelay);
+
+  Serial.print(F("Playing thunder sound, file number: "));
+  Serial.println(thunderFile);
+  myDFPlayer.playMp3Folder(thunderFile);
+  delay(1000); // Give the DFPlayer some time
+}
+
+/*
+
 void originalLightning() {
   int flashCount = random (3, 15);        // Min. and max. number of flashes each loop
   int flashBrightnessMin =  10;           // LED flash min. brightness (0-255)
@@ -190,18 +200,4 @@ void originalLightning() {
     analogWrite(LED_PIN, 0); // Turn the LED strip off
     delay(random(nextFlashDelayMin, nextFlashDelayMax)); // Random delay before next flash
   }
-}
-
-void originalThunder() {
-  int thunderDelay = random (500, 3000);  // Min. and max. delay between flashing and playing sound
-  int thunderFile = random (1, NUM_SOUND_EFFECTS);       // There are 17 soundfiles: 0001.mp3 ... 0017.mp3
-
-  Serial.print(F("Pausing before playing thunder sound, milliseconds: "));
-  Serial.println(thunderDelay);
-  delay(thunderDelay);
-
-  Serial.print(F("Playing thunder sound, file number: "));
-  Serial.println(thunderFile);
-  myDFPlayer.playMp3Folder(thunderFile);
-  delay(1000); // Give the DFPlayer some time
 }
