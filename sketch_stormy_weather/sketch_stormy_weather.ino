@@ -15,6 +15,16 @@
 SoftwareSerial mySoftwareSerial(RX_PIN, TX_PIN);
 DFRobotDFPlayerMini myDFPlayer;
 
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
+    // Argument 1 = Number of pixels in NeoPixel strip
+    // Argument 2 = Arduino pin number (most are valid)
+    // Argument 3 = Pixel type flags, add together as needed:
+    //   NEO_KHZ800  800 KHz bitstream (most NeoPixel products w/WS2812 LEDs)
+    //   NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
+    //   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
+    //   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
+    //   NEO_RGBW    Pixels are wired for RGBW bitstream (NeoPixel RGBW products)
+
 void setup()
 {
   // Set Pin Modes
@@ -41,15 +51,17 @@ void setup()
   myDFPlayer.enableDAC();                       // Enable On-chip DAC
 
   // Pixel set-up
+  strip.begin();
+  strip.show(); // Initialize all pixels to 'off'
 }
 
 void loop()
 {
-  originalLightning();
-  originalThunder();
-
+  // TODO Randomness before calling strike
   // TODO new lightning
+  originalLightning();
   // TODO new thunder
+  originalThunder();
 
   while (digitalRead(BUSY_PIN) == LOW) { 
     // Wait for the DFPlayer to finish playing the MP3 file
@@ -60,6 +72,35 @@ void loop()
   Serial.println(loopDelay);
   delay(loopDelay);
 }
+
+void lightningStrike() {
+  if (random(chance) == 3) {
+  int led = random(NUM_LEDS);
+    for (int i = 0; i < 10; i++) {
+      
+      float brightness = callFunction(random(NUM_FUNCTIONS));
+      float scaledWhite = abs(brightness*500);
+      
+      strip.setPixelColor(random(NUM_LEDS), strip.Color(scaledWhite, scaledWhite, scaledWhite));
+      strip.show();
+      delay(random(5, 100));
+      currentDataPoint++;
+      currentDataPoint = currentDataPoint%NUM_Y_VALUES;
+
+    }
+    // Once there's been one strike, I make it more likely that there will be a second.
+    chance = HIGH_STRIKE_LIKELIHOOD;
+  } else {
+    chance = LOW_STRIKE_LIKELIHOOD;
+  }
+  turnAllPixelsOff();
+
+  //
+
+  
+}
+
+void thunderClap() {}
 
 /*
  *  OLD FUNCTIONS 
