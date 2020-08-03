@@ -77,8 +77,6 @@ void loop()
 }
 
 void lightningStrike() {
-  
-  int led = random(NUM_LEDS);
   for (int i = 0; i < 10; i++) {
     float brightness = callFunction(random(NUM_FUNCTIONS));
     float scaledWhite = abs(brightness*500);
