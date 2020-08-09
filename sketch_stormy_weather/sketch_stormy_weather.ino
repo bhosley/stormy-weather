@@ -17,10 +17,25 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ
 
 void setup()
 {
-  
+  // Neopixel setup
+  strip.begin();
+  strip.show(); // Initialize all pixels to 'off' 
 }
 
 void loop()
 {
-  
+  // Begin Ambient Noise
+  if (true) {    // Thunder&Lightning Switch (Storm Scene Sequence)
+    if (random(10) == 3) {    // Represents the Inverse probability of lightning strike
+      int led = random(NUM_LEDS);
+      for (int i = 0; i < 10; i++) {
+        /* call for lightning strike and thunder clad */
+      }
+      /* Set Strike chance high for increased odds of immediate follow-up */
+    } else {
+      /* Set Strike chance low*/
+    }
+    strip.clear();
+    delay(1000); /* Time between potential storm sequences; add read from potentiometer? */
+  } // End Storm Sequence
 }
