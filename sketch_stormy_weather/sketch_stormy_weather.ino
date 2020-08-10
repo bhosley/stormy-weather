@@ -9,6 +9,8 @@ int currentIndex = 0;
 float y[] = {};
 int lenY = sizeof(y) / sizeof(y[0]);
 
+RandomMovingAverage rma;
+SimpleMovingAverage sma;
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
     // Argument 1 = Number of pixels in NeoPixel strip
     // Argument 2 = Arduino pin number (most are valid)
@@ -33,8 +35,12 @@ void loop()
     if (random(10) == 3) {    // Represents the Inverse probability of lightning strike
       int led = random(NUM_LEDS);
       for (int i = 0; i < 10; i++) {
-        /* call for lightning strike and thunder clad */
-        float brightness = /* callFunction(random(NUM_FUNCTIONS)); randomly call one of the moving randoms */;
+        float brightness;
+        if (random(1) == 1) {
+          float brightness = sma.addValue(y[currentIndex]);
+        } else {
+          float brightness = rma.addValue(y[currentIndex]);
+        }
         float scaledWhite = abs(brightness*500);
 
         strip.setPixelColor(random(NUM_LEDS), strip.Color(scaledWhite, scaledWhite, scaledWhite));
@@ -43,6 +49,8 @@ void loop()
 
         currentIndex++;
         currentIndex = currentIndex % lenY;
+        
+        /* call for thunder clap */
       }
       /* Set Strike chance high for increased odds of immediate follow-up */
     } else {
