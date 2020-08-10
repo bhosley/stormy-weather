@@ -2,15 +2,15 @@
 #include "MovingAverage.h"
 #include <Adafruit_NeoPixel.h>
 
-#define NUM_LEDS = 4;
-#define LED_PIN = 4;
+#define NUM_LEDS 4
+#define LED_PIN 4
 
 int currentIndex = 0;
 float y[] = { 0, 7, 10, 9, 7.1, 7.5, 7.4, 12, 15, 10, 0, 3, 3.5, 4, 1, 7, 1 }; // Using values from Molly Nicholas
 int lenY = sizeof(y) / sizeof(y[0]);
 
-RandomMovingAverage rma = RandomMovingAverage(1);
-SimpleMovingAverage sma = SimpleMovingAverage(1);
+RandomMovingAverage rma = RandomMovingAverage();
+SimpleMovingAverage sma = SimpleMovingAverage();
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
     // Argument 1 = Number of pixels in NeoPixel strip
     // Argument 2 = Arduino pin number (most are valid)
