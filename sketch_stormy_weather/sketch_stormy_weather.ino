@@ -5,6 +5,10 @@
 #define NUM_LEDS = 4;
 #define LED_PIN = 4;
 
+int currentIndex = 0;
+float y[] = {};
+int lenY = sizeof(y) / sizeof(y[0]);
+
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
     // Argument 1 = Number of pixels in NeoPixel strip
     // Argument 2 = Arduino pin number (most are valid)
@@ -30,6 +34,15 @@ void loop()
       int led = random(NUM_LEDS);
       for (int i = 0; i < 10; i++) {
         /* call for lightning strike and thunder clad */
+        float brightness = /* callFunction(random(NUM_FUNCTIONS)); randomly call one of the moving randoms */;
+        float scaledWhite = abs(brightness*500);
+
+        strip.setPixelColor(random(NUM_LEDS), strip.Color(scaledWhite, scaledWhite, scaledWhite));
+        strip.show();
+        delay(random(5, 100));
+
+        currentIndex++;
+        currentIndex = currentIndex % lenY;
       }
       /* Set Strike chance high for increased odds of immediate follow-up */
     } else {
