@@ -6,7 +6,7 @@
 #define LED_PIN = 4;
 
 int currentIndex = 0;
-float y[] = {};
+float y[] = { 0, 7, 10, 9, 7.1, 7.5, 7.4, 12, 15, 10, 0, 3, 3.5, 4, 1, 7, 1 }; // Using values from Molly Nicholas
 int lenY = sizeof(y) / sizeof(y[0]);
 
 RandomMovingAverage rma;
