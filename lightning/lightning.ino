@@ -35,9 +35,8 @@ void setup()
 void loop()
 {
   if (random(invStrikeChance) == 3) {    // Represents the Inverse probability of lightning strike
-    int led = random(NUM_LEDS);
+    /*-------------  Lightning Strike  ------------ */
     for (int i = 0; i < 10; i++) {
-      /*-------------  Lightning Strike  ------------ */
       float brightness = random(1) == 1 ? 
         rma.addValue(y[currentIndex]) : sma.addValue(y[currentIndex]);
 
@@ -49,21 +48,21 @@ void loop()
 
       currentIndex++;
       currentIndex = currentIndex % lenY;
-      /*-------------  Lightning Strike  ------------ */
-      /*------------- Signal for Thunder ------------ */
-      digitalWrite(1, HIGH);
-      delay(2000);
-      digitalWrite(1, LOW);
-      delay(1000);      
-      /*------------- Signal for Thunder ------------ */
     }
+    /*-------------  Lightning Strike  ------------ */
+    for (int i = 0; i < NUM_LEDS; i++) {
+      pixels.setPixelColor(i, 0);
+    }
+    pixels.show();
+    /*------------- Signal for Thunder ------------ */
+    digitalWrite(1, HIGH);
+    delay(2000);
+    digitalWrite(1, LOW);
+    delay(1000);      
+    /*------------- Signal for Thunder ------------ */
     invStrikeChance = 5; // Make follow-up strikes more likely
   } else {
     invStrikeChance = 10;
   }
-  for (int i = 0; i < NUM_LEDS; i++) {
-    pixels.setPixelColor(i, 0);
-  }
-  pixels.show();
   delay(1000); /* Time between potential storm sequences; add read from potentiometer? */
 }
