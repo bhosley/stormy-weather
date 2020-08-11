@@ -53,7 +53,9 @@ void loop()
     } else {
       /* Set Strike chance low*/
     }
-    strip.clear();
+    for (int i = 0; i < NUM_LEDS; i++) {
+      strip.setPixelColor(i, 0);
+    }
     strip.show();
     delay(1000); /* Time between potential storm sequences; add read from potentiometer? */
   } // End Storm Sequence
