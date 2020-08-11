@@ -2,16 +2,19 @@
 #include "SoftwareSerial.h"
 #include "DFRobotDFPlayerMini.h"
 
+#define THUNDER_PIN 2
 
+int RX_PIN = 4;    // DFplayer RX to Arduino pin 4
+int TX_PIN = 5;    // DFplayer TX to Arduino pin 5
+int BUSY_PIN = 3;  // DFplayer BUSY connected to pin 2
 
-SoftwareSerial mySoftwareSerial(rxPin, txPin);
+SoftwareSerial mySoftwareSerial(RX_PIN, TX_PIN);
 DFRobotDFPlayerMini myDFPlayer;
 
 void setup()
 {
-
   pinMode(ledPin, OUTPUT);
-  pinMode(busyPin, INPUT);
+  pinMode(BUSY_PIN, INPUT);
 
   mySoftwareSerial.begin(9600);
   Serial.begin(115200);
@@ -33,47 +36,18 @@ void setup()
 
 void loop()
 {
-  int flashCount = random (3, 15);        // Min. and max. number of flashes each loop
-  int flashBrightnessMin =  10;           // LED flash min. brightness (0-255)
-  int flashBrightnessMax =  255;          // LED flash max. brightness (0-255)
+  int rainFile = random (1, 2);       // There are x soundfiles: 0001.mp3 ... 00xx.mp3
+    Serial.println(rainFile);
+    Serial.print(F("Playing thunder sound, file number: "));
+  myDFPlayer.playMp3Folder(rainFile);
 
-  int flashDurationMin = 1;               // Min. duration of each seperate flash
-  int flashDurationMax = 50;              // Max. duration of each seperate flash
-
-  int nextFlashDelayMin = 1;              // Min, delay between each flash and the next
-  int nextFlashDelayMax = 150;            // Max, delay between each flash and the next
-
-  int thunderDelay = random (500, 3000);  // Min. and max. delay between flashing and playing sound
-  int thunderFile = random (1, 17);       // There are 17 soundfiles: 0001.mp3 ... 0017.mp3
-  int loopDelay = random (5000, 30000);   // Min. and max. delay between each loop
-
-  Serial.println();
-  Serial.print(F("Flashing, count: "));
-  Serial.println( flashCount );
-
-  for (int flash = 0 ; flash <= flashCount; flash += 1) { // Flashing LED strip in a loop, random count
-
-    analogWrite(ledPin, random (flashBrightnessMin, flashBrightnessMax)); // Turn LED strip on, random brightness
-    delay(random(flashDurationMin, flashDurationMax)); // Keep it tured on, random duration
-
-    analogWrite(ledPin, 0); // Turn the LED strip off
-    delay(random(nextFlashDelayMin, nextFlashDelayMax)); // Random delay before next flash
-  }
-
-  Serial.print(F("Pausing before playing thunder sound, milliseconds: "));
-  Serial.println(thunderDelay);
-  delay(thunderDelay);
-
-  Serial.print(F("Playing thunder sound, file number: "));
-  Serial.println(thunderFile);
   myDFPlayer.playMp3Folder(thunderFile);
   delay(1000); // Give the DFPlayer some time
 
-  while (digitalRead(busyPin) == LOW) { // Wait for the DFPlayer to finish playing the MP3 file
+  while (digitalRead(BUSY_PIN) == LOW) { // Wait for the DFPlayer to finish playing the MP3 file
   }
 
   Serial.print(F("Pausing before next loop, milliseconds: "));
   Serial.println(loopDelay);
   delay(loopDelay);
-
 }
