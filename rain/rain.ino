@@ -36,18 +36,18 @@ void setup()
 
 void loop()
 {
-  int rainFile = random (1, 2);       // There are x soundfiles: 0001.mp3 ... 00xx.mp3
-    Serial.println(rainFile);
-    Serial.print(F("Playing thunder sound, file number: "));
-  myDFPlayer.playMp3Folder(rainFile);
-
-  myDFPlayer.playMp3Folder(thunderFile);
-  delay(1000); // Give the DFPlayer some time
-
-  while (digitalRead(BUSY_PIN) == LOW) { // Wait for the DFPlayer to finish playing the MP3 file
+    if (digitalRead(BUSY_PIN) == LOW) {
+        int rainFile = random (1, 2);       // There are x soundfiles: 0001.mp3 ... 00xx.mp3
+            Serial.print(F("Playing rain sound, file number: "));
+            Serial.println(rainFile);
+        myDFPlayer.playMp3Folder(rainFile);
+        delay(500); // Give the DFPlayer some time
+    }
+  if (digitalRead(THUNDER_PIN) == HIGH) {
+      int thunderFile = random (100, 102);   // There are x thunder files: 0100.mp3 ... 01xx.mp3
+            Serial.print(F("Playing thunder sound, file number: "));
+            Serial.println(thunderFile);
+      myDFPlayer.playMp3Folder(thunderFile);
+      //myDFPlayer.advertise(thunderFile);
   }
-
-  Serial.print(F("Pausing before next loop, milliseconds: "));
-  Serial.println(loopDelay);
-  delay(loopDelay);
 }
