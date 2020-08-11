@@ -23,6 +23,8 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ
 
 void setup()
 {
+  pinMode(LED_PIN, OUTPUT); // Necessary call for Attiny85
+  
   // Neopixel setup
   strip.begin();
   strip.show(); // Initialize all pixels to 'off' 
